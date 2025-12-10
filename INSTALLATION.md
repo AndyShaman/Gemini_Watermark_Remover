@@ -1,82 +1,92 @@
-# 📥 Installation Guide
+# Installation Guide
 
-## ⚠️ IMPORTANT: Read This First
+## Quick Start (Chrome Extension)
 
-This extension includes a large AI model (\~200MB). Because of this, **please do not use the "Download ZIP" button** on GitHub.
+Follow these simple steps to install and use the Gemini Watermark Remover extension.
 
-Using "Download ZIP" will fail to download the AI model correctly (you will get a tiny 1KB file instead of the real model), and the extension will not work.
+> ⚠️ **IMPORTANT NOTE**: This project no longer uses Git LFS (Large File Storage) due to bandwidth quotas. The AI model must be downloaded manually (see Step 2).
 
-**Please use the `git clone` method described below.**
+### Step 1: Get the Code
 
------
+Clone the repository or download the ZIP file:
 
-## Step 1: Get the Files (The Right Way)
+```bash
+git clone https://github.com/dinoBOLT/Gemini-Watermark-Remover.git
+```
 
-You need to use **Git** to download this project. If you don't have Git installed, [download it here](https://www.google.com/search?q=https://git-scm.com/downloads) and install it (keep all default settings).
+(If you are downloading the ZIP, extract it to a folder on your computer, e.g., `Documents/gemini-watermark-remover`).
 
-1.  Open your **Terminal** (Command Prompt or PowerShell on Windows, Terminal on Mac/Linux).
-2.  Run the following command to enable Large File Storage support:
-    ```bash
-    git lfs install
-    ```
-3.  Run the command to download the project and the AI model:
-    ```bash
-    git clone https://github.com/dinoBOLT/Gemini-Watermark-Remover.git
-    ```
-    *(Wait for the download to finish. It might take a minute depending on your internet connection).*
+### Step 2: Download the AI Model (Required)
 
------
+Since Git LFS is obsolete for this project, you must download the AI model manually. **The extension will not work without this file.**
 
-## Step 2: Load the Extension in Chrome
+**Download the model (`lama_fp32.onnx`):**
 
-Once the download is complete, you need to load the folder into your browser.
+👉 [Click here to download from Hugging Face](https://huggingface.co/your-username/gemini-watermark-remover/resolve/main/lama_fp32.onnx)
 
-1.  Open **Google Chrome**.
-2.  Type `chrome://extensions/` in the address bar and press Enter.
-3.  In the top-right corner, make sure **Developer mode** is turned **ON**.
-4.  Click the **Load unpacked** button (top-left).
-5.  Select the folder `Gemini-Watermark-Remover` that you just cloned.
-      * *Note: Make sure you select the folder that contains the `manifest.json` file.*
+**Place the file:**
 
-The extension icon should now appear in your browser toolbar\! 🎉
+Move the downloaded `lama_fp32.onnx` file into the `src/assets/` folder inside the project directory.
 
------
+Your folder structure must look like this:
 
-## Step 3: Verify the Installation
+```
+gemini-watermark-remover/
+├── src/
+│   ├── assets/
+│   │   └── lama_fp32.onnx  <-- The file goes here (approx. 200MB)
+│   └── ...
+├── manifest.json
+└── ...
+```
 
-To make sure the AI model was downloaded correctly:
+### Step 3: Load the Extension in Chrome
 
-1.  Open the folder on your computer.
-2.  Go to `src` -\> `assets`.
-3.  Check the file named **`lama_fp32.onnx`**.
-4.  **It should be around 198 MB.**
-      * *If it is only 1 KB (or very small), it means Git LFS was not installed or you used the ZIP button.*
-      * *Solution: Run `git lfs pull` inside the folder or re-do Step 1.*
+1. Open **Google Chrome**
+2. Navigate to `chrome://extensions/` (or go to Menu → Extensions → Manage Extensions)
+3. Enable **Developer mode** by toggling the switch in the top-right corner
+4. Click the **"Load unpacked"** button
+5. Select the `gemini-watermark-remover` folder (ensure it contains `manifest.json`)
+6. The extension icon should now appear in your Chrome toolbar
 
------
+### Step 4: Use the Extension
+
+1. Click the **Gemini Watermark Remover** icon in your toolbar
+2. A new tab will open with the application interface
+3. Drag and drop an image with a Gemini watermark, or click to browse
+4. Wait for the AI to process the image (progress bar will show status)
+5. Once complete, use the before/after slider to compare results
+6. Click **"Download Image"** to save the cleaned image
 
 ## Troubleshooting
 
-**Error: "Failed to load AI model"**
+### Extension doesn't load
 
-  * Check your internet connection.
-  * Ensure the `lama_fp32.onnx` file in `src/assets/` is \~198 MB.
+- **Error**: "Could not load icon"
+  - **Solution**: Make sure you extracted the ZIP file completely. The `icons/` folder must contain `icon16.png`, `icon48.png`, and `icon128.png`.
 
-**Error: "Manifest file is missing or unreadable"**
+- **Error**: "Manifest file is missing or unreadable"
+  - **Solution**: Ensure you selected the correct folder (the one containing `manifest.json`, not a parent folder).
 
-  * You probably selected the wrong folder. When clicking "Load unpacked", make sure you are selecting the folder directly containing the `manifest.json` file.
+### Processing fails
+
+- **Error**: "Failed to load AI model" / "File not found"
+  - **Solution**: You missed Step 2. The `lama_fp32.onnx` file is missing from `src/assets/`. Download it from the link above and place it there.
+
+- **Error**: "File size exceeds limit"
+  - **Solution**: The maximum file size is 50 MB. Try compressing your image first.
 
 ### Performance issues
 
 - If processing is slow, close other Chrome tabs to free up memory
-- The first run will be slower as the model loads; subsequent runs will be faster
+- The first run will be slower as the model initializes; subsequent runs will be faster
 
 ## System Requirements
 
 - **Browser**: Google Chrome (version 90+) or Chromium-based browsers
 - **RAM**: At least 4 GB recommended (8 GB for optimal performance)
 - **Storage**: ~250 MB for the extension and model
-- **Internet**: Required only for the first model download
+- **Internet**: Required to download the initial model file from Hugging Face
 
 ## Privacy Note
 
@@ -96,4 +106,4 @@ To remove the extension:
 If you encounter any issues not covered here, please:
 
 1. Check the [README.md](README.md) for more information
-2. Open an issue on the [GitHub repository](https://github.com/your-username/gemini-watermark-remover/issues)
+2. Open an issue on the [GitHub repository](https://github.com/dinoBOLT/Gemini-Watermark-Remover/issues)

@@ -1,0 +1,23 @@
+# System files
+.DS_Store
+.DS_Store?
+*.swp
+*.swo
+*~
+
+# Model file (download separately)
+src/assets/lama_fp32.onnx
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Logs
+*.log
+npm-debug.log*

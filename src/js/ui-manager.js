@@ -4,7 +4,6 @@
  */
 
 import { CONFIG } from './config.js';
-import { formatFileSize } from './utils.js';
 
 /**
  * UI Manager class
@@ -135,23 +134,28 @@ export class UIManager {
    * Reset UI to initial state
    */
   reset() {
-    const { dropZone, resultArea, progressContainer, fileInput, comparisonContainer } = this.elements;
-    
+    const { dropZone, resultArea, progressContainer, fileInput, comparisonContainer, maskEditorSection } = this.elements;
+
     resultArea.style.display = 'none';
     dropZone.style.display = 'flex';
     progressContainer.style.display = 'none';
-    
+
+    // Hide mask editor section if exists
+    if (maskEditorSection) {
+      maskEditorSection.style.display = 'none';
+    }
+
     if (comparisonContainer) {
       comparisonContainer.style.display = 'none';
       comparisonContainer.innerHTML = '';
     }
-    
+
     fileInput.value = '';
-    
+
     if (this.logger) {
       this.logger.clear();
     }
-    
+
     this.currentState = 'idle';
   }
 

@@ -7,29 +7,29 @@ import { CONFIG } from './config.js';
 import { calculateWatermarkRegion } from './utils.js';
 
 /**
- * Preprocess image for model input
+ * Preprocess image for model input (with auto-detected watermark region)
  * @param {ImageData} imageData - The input image data
  * @returns {Object} - { imageTensor, maskTensor }
  */
 export function preprocessImage(imageData) {
   const { width, height, data } = imageData;
-  
+
   // Create image tensor (1, 3, H, W) - CHW format
   const float32Data = new Float32Array(3 * width * height);
-  
+
   // Normalize RGB values from [0, 255] to [0, 1] and convert HWC to CHW
   for (let i = 0; i < width * height; i++) {
     float32Data[i] = data[i * 4] / 255.0;                          // R channel
     float32Data[width * height + i] = data[i * 4 + 1] / 255.0;    // G channel
     float32Data[2 * width * height + i] = data[i * 4 + 2] / 255.0; // B channel
   }
-  
+
   const imageTensor = new ort.Tensor('float32', float32Data, [1, 3, height, width]);
-  
+
   // Create mask tensor (1, 1, H, W)
   const maskData = new Float32Array(width * height);
   const region = calculateWatermarkRegion(width, height);
-  
+
   // Set mask: 1.0 for watermark region, 0.0 for rest
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
@@ -42,9 +42,44 @@ export function preprocessImage(imageData) {
       }
     }
   }
-  
+
   const maskTensor = new ort.Tensor('float32', maskData, [1, 1, height, width]);
-  
+
+  return { imageTensor, maskTensor };
+}
+
+/**
+ * Preprocess image with custom user-drawn mask
+ * @param {ImageData} imageData - The input image data (resized to model size)
+ * @param {ImageData} maskImageData - The user-drawn mask (white = inpaint, black = preserve)
+ * @returns {Object} - { imageTensor, maskTensor }
+ */
+export function preprocessImageWithMask(imageData, maskImageData) {
+  const { width, height, data } = imageData;
+
+  // Create image tensor (1, 3, H, W) - CHW format
+  const float32Data = new Float32Array(3 * width * height);
+
+  // Normalize RGB values from [0, 255] to [0, 1] and convert HWC to CHW
+  for (let i = 0; i < width * height; i++) {
+    float32Data[i] = data[i * 4] / 255.0;                          // R channel
+    float32Data[width * height + i] = data[i * 4 + 1] / 255.0;    // G channel
+    float32Data[2 * width * height + i] = data[i * 4 + 2] / 255.0; // B channel
+  }
+
+  const imageTensor = new ort.Tensor('float32', float32Data, [1, 3, height, width]);
+
+  // Create mask tensor from user-drawn mask (1, 1, H, W)
+  const maskData = new Float32Array(width * height);
+
+  // Convert mask: white pixels (R > 128) = 1.0 (inpaint), black = 0.0 (preserve)
+  for (let i = 0; i < width * height; i++) {
+    // Check red channel of mask (white = 255, black = 0)
+    maskData[i] = maskImageData.data[i * 4] > 128 ? 1.0 : 0.0;
+  }
+
+  const maskTensor = new ort.Tensor('float32', maskData, [1, 1, height, width]);
+
   return { imageTensor, maskTensor };
 }
 
@@ -92,7 +127,7 @@ export function postprocessImage(outputTensor, width, height) {
 /**
  * Compose final image by blending original and processed regions
  * Strategy: Only replace the watermark region, keep the rest pristine
- * 
+ *
  * @param {ImageBitmap} originalBitmap - Original full-resolution image
  * @param {ImageData} processedImageData - Processed 512x512 image data
  * @returns {string} - Data URL of the final composed image
@@ -100,36 +135,36 @@ export function postprocessImage(outputTensor, width, height) {
 export function composeFinalImage(originalBitmap, processedImageData) {
   const { width: origWidth, height: origHeight } = originalBitmap;
   const processedSize = CONFIG.MODEL.INPUT_SIZE;
-  
+
   // Create final canvas at original resolution
   const finalCanvas = document.createElement('canvas');
   finalCanvas.width = origWidth;
   finalCanvas.height = origHeight;
   const finalCtx = finalCanvas.getContext('2d');
-  
+
   // Draw original image as base
   finalCtx.drawImage(originalBitmap, 0, 0);
-  
+
   // Create temporary canvas for processed image
   const tempCanvas = document.createElement('canvas');
   tempCanvas.width = processedSize;
   tempCanvas.height = processedSize;
   const tempCtx = tempCanvas.getContext('2d');
   tempCtx.putImageData(processedImageData, 0, 0);
-  
+
   // Calculate watermark regions for both original and processed images
   const origRegion = calculateWatermarkRegion(
-    origWidth, 
-    origHeight, 
+    origWidth,
+    origHeight,
     CONFIG.WATERMARK.EXTENDED_RATIO
   );
-  
+
   const processedRegion = calculateWatermarkRegion(
-    processedSize, 
-    processedSize, 
+    processedSize,
+    processedSize,
     CONFIG.WATERMARK.EXTENDED_RATIO
   );
-  
+
   // Extract and blend only the watermark region
   // This preserves the quality of the rest of the image
   finalCtx.drawImage(
@@ -137,7 +172,81 @@ export function composeFinalImage(originalBitmap, processedImageData) {
     processedRegion.x, processedRegion.y, processedRegion.width, processedRegion.height,  // Source
     origRegion.x, origRegion.y, origRegion.width, origRegion.height                        // Destination
   );
-  
+
+  // Convert to data URL
+  return finalCanvas.toDataURL(CONFIG.IMAGE.OUTPUT_FORMAT, CONFIG.IMAGE.OUTPUT_QUALITY);
+}
+
+/**
+ * Compose final image using user-drawn mask
+ * Only replaces pixels where mask is white, preserves everything else
+ *
+ * @param {ImageBitmap} originalBitmap - Original full-resolution image
+ * @param {ImageData} processedImageData - Processed 512x512 image data
+ * @param {ImageData} maskImageData - User-drawn mask (white = replace, black = preserve)
+ * @returns {string} - Data URL of the final composed image
+ */
+export function composeFinalImageWithMask(originalBitmap, processedImageData, maskImageData) {
+  const { width: origWidth, height: origHeight } = originalBitmap;
+  const processedSize = CONFIG.MODEL.INPUT_SIZE;
+
+  // Create final canvas at original resolution
+  const finalCanvas = document.createElement('canvas');
+  finalCanvas.width = origWidth;
+  finalCanvas.height = origHeight;
+  const finalCtx = finalCanvas.getContext('2d');
+
+  // Draw original image as base
+  finalCtx.drawImage(originalBitmap, 0, 0);
+
+  // Get original image data
+  const originalImageData = finalCtx.getImageData(0, 0, origWidth, origHeight);
+
+  // Create temporary canvas for processed image and scale it to original size
+  const processedCanvas = document.createElement('canvas');
+  processedCanvas.width = processedSize;
+  processedCanvas.height = processedSize;
+  const processedCtx = processedCanvas.getContext('2d');
+  processedCtx.putImageData(processedImageData, 0, 0);
+
+  // Scale processed image to original resolution
+  const scaledCanvas = document.createElement('canvas');
+  scaledCanvas.width = origWidth;
+  scaledCanvas.height = origHeight;
+  const scaledCtx = scaledCanvas.getContext('2d');
+  scaledCtx.drawImage(processedCanvas, 0, 0, origWidth, origHeight);
+  const scaledProcessedData = scaledCtx.getImageData(0, 0, origWidth, origHeight);
+
+  // Scale mask to original resolution
+  const maskCanvas = document.createElement('canvas');
+  maskCanvas.width = processedSize;
+  maskCanvas.height = processedSize;
+  const maskCtx = maskCanvas.getContext('2d');
+  maskCtx.putImageData(maskImageData, 0, 0);
+
+  const scaledMaskCanvas = document.createElement('canvas');
+  scaledMaskCanvas.width = origWidth;
+  scaledMaskCanvas.height = origHeight;
+  const scaledMaskCtx = scaledMaskCanvas.getContext('2d');
+  scaledMaskCtx.drawImage(maskCanvas, 0, 0, origWidth, origHeight);
+  const scaledMaskData = scaledMaskCtx.getImageData(0, 0, origWidth, origHeight);
+
+  // Blend: only replace pixels where mask is white
+  for (let i = 0; i < origWidth * origHeight; i++) {
+    const maskValue = scaledMaskData.data[i * 4]; // Red channel of mask
+
+    if (maskValue > 128) {
+      // Mask is white - use processed pixel
+      originalImageData.data[i * 4] = scaledProcessedData.data[i * 4];
+      originalImageData.data[i * 4 + 1] = scaledProcessedData.data[i * 4 + 1];
+      originalImageData.data[i * 4 + 2] = scaledProcessedData.data[i * 4 + 2];
+    }
+    // else: keep original pixel (already there)
+  }
+
+  // Put blended result back
+  finalCtx.putImageData(originalImageData, 0, 0);
+
   // Convert to data URL
   return finalCanvas.toDataURL(CONFIG.IMAGE.OUTPUT_FORMAT, CONFIG.IMAGE.OUTPUT_QUALITY);
 }

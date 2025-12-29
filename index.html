@@ -35,6 +35,68 @@
             <input type="file" id="fileInput" accept="image/*" aria-label="Select image file">
         </div>
 
+        <!-- Mask Editor Section -->
+        <div class="mask-editor-section" id="maskEditorSection" style="display: none;">
+            <h2 class="editor-title">Draw mask over watermark area</h2>
+
+            <!-- Toolbar -->
+            <div class="mask-toolbar">
+                <div class="tool-group">
+                    <button class="tool-btn active" id="brushTool" title="Brush (B)">
+                        <span class="tool-icon">🖌️</span>
+                        <span class="tool-label">Brush</span>
+                    </button>
+                    <button class="tool-btn" id="eraserTool" title="Eraser (E)">
+                        <span class="tool-icon">🧹</span>
+                        <span class="tool-label">Eraser</span>
+                    </button>
+                    <button class="tool-btn" id="handTool" title="Hand (H) - drag to pan">
+                        <span class="tool-icon">✋</span>
+                        <span class="tool-label">Hand</span>
+                    </button>
+                </div>
+
+                <div class="tool-group">
+                    <label class="brush-size-label">
+                        <span>Size:</span>
+                        <input type="range" id="brushSize" min="5" max="200" value="20" class="brush-size-slider">
+                        <span id="brushSizeValue">20</span>px
+                    </label>
+                </div>
+
+                <div class="tool-group">
+                    <button class="tool-btn" id="clearMask" title="Clear mask">
+                        <span class="tool-icon">🗑️</span>
+                        <span class="tool-label">Clear</span>
+                    </button>
+                </div>
+
+                <div class="tool-group zoom-controls">
+                    <button class="zoom-btn" id="zoomOut" title="Zoom out (-)">−</button>
+                    <span class="zoom-value" id="zoomValue">100%</span>
+                    <button class="zoom-btn" id="zoomIn" title="Zoom in (+)">+</button>
+                    <button class="zoom-btn" id="zoomFit" title="Fit to screen">⊡</button>
+                </div>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="mask-editor-container" id="maskEditorContainer"></div>
+
+            <!-- Action Buttons -->
+            <div class="editor-actions">
+                <button class="btn btn-primary" id="processBtn" disabled>
+                    <span class="btn-icon">✨</span>
+                    Remove Watermark
+                </button>
+                <button class="btn btn-secondary" id="cancelEditBtn">
+                    <span class="btn-icon">↩️</span>
+                    Cancel
+                </button>
+            </div>
+
+            <p class="editor-hint">Paint over the watermark area with the brush, then click "Remove Watermark"</p>
+        </div>
+
         <!-- Progress Section -->
         <div class="progress-container" id="progressContainer">
             <div class="progress-bar" id="progressBar"></div>

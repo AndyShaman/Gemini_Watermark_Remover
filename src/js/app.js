@@ -193,14 +193,16 @@ class Application {
     const section = document.getElementById('maskEditorSection');
     const dropZone = document.getElementById('dropZone');
     const processBtn = document.getElementById('processBtn');
+    const brushSize = document.getElementById('brushSize');
 
     // Hide drop zone, show editor
     dropZone.style.display = 'none';
     section.style.display = 'block';
 
-    // Initialize mask editor
+    // Initialize mask editor with brush size from slider
+    const currentBrushSize = parseInt(brushSize.value, 10);
     this.maskEditor = new MaskEditor(container, {
-      brushSize: 20,
+      brushSize: currentBrushSize,
       maskColor: 'rgba(255, 0, 0, 0.5)' // Red semi-transparent
     });
 

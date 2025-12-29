@@ -13,7 +13,7 @@ export class MaskEditor {
   constructor(container, options = {}) {
     this.container = container;
     this.options = {
-      brushSize: options.brushSize || 20,
+      brushSize: options.brushSize || 110,
       minBrushSize: options.minBrushSize || 5,
       maxBrushSize: options.maxBrushSize || 200,
       maskColor: options.maskColor || 'rgba(255, 0, 0, 0.5)', // Red semi-transparent

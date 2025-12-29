@@ -64,9 +64,11 @@ Gemini-Watermark-Remover/
 1. Нажмите на иконку **Gemini Watermark Remover** на панели инструментов
 2. Откроется новая вкладка с интерфейсом приложения
 3. Перетащите изображение с водяным знаком Gemini или нажмите для выбора файла
-4. Дождитесь обработки изображения AI (прогресс-бар покажет статус)
-5. После завершения используйте слайдер для сравнения результатов "до/после"
-6. Нажмите **"Download Image"** для сохранения очищенного изображения
+4. **Выделите кистью область водяного знака** - используйте инструмент кисти, чтобы закрасить область, где находится водяной знак
+5. **Подкорректируйте выделение** при необходимости - используйте ластик, масштабирование (zoom) и панорамирование (pan)
+6. **Нажмите кнопку "Удалить водяной знак"** - AI обработает только выделенную область (прогресс-бар покажет статус)
+7. После завершения используйте слайдер для сравнения результатов "до/после"
+8. Нажмите **"Download Image"** для сохранения очищенного изображения
 
 ## Устранение неполадок
 
@@ -182,9 +184,11 @@ Gemini-Watermark-Remover/
 1. Click the **Gemini Watermark Remover** icon in your toolbar
 2. A new tab will open with the application interface
 3. Drag and drop an image with a Gemini watermark, or click to browse
-4. Wait for the AI to process the image (progress bar will show status)
-5. Once complete, use the before/after slider to compare results
-6. Click **"Download Image"** to save the cleaned image
+4. **Mark the watermark area with the brush** - use the brush tool to paint over the area where the watermark is located
+5. **Refine your selection** if needed - use the eraser, zoom, and pan controls for precision
+6. **Click the "Remove Watermark" button** - AI will process only the selected area (progress bar will show status)
+7. Once complete, use the before/after slider to compare results
+8. Click **"Download Image"** to save the cleaned image
 
 ## Troubleshooting
 

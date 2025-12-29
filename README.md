@@ -18,11 +18,12 @@
 ### 🌟 Основные возможности
 
 - **100% локальная обработка**: Вся обработка происходит прямо в вашем браузере. Ваши изображения никогда не покидают компьютер.
-- **Высококачественная замена**: Использует мощную AI-модель LaMa (Large Mask Inpainting) для интеллектуального удаления водяного знака с минимальным влиянием на оригинальное изображение.
-- **Сохранение оригинального качества**: Изменяется только небольшая область с водяным знаком. Остальная часть изображения остается идеально нетронутой.
+- **Ручное выделение области**: Полный контроль над процессом - вы сами выбираете кистью область водяного знака для удаления, что обеспечивает максимальную точность.
+- **Инструменты редактирования**: Кисть для выделения, ластик для коррекции, масштабирование (zoom) и панорамирование (pan) для удобной и точной работы.
+- **Высококачественная AI-обработка**: Использует мощную модель LaMa (Large Mask Inpainting) для интеллектуального удаления водяного знака с естественным восстановлением фона.
+- **Сохранение оригинального качества**: Изменяется только выделенная вами область. Остальная часть изображения остается идеально нетронутой.
 - **Современный интерфейс**: Элегантный, отзывчивый интерфейс с поддержкой drag-and-drop, прогресс-баром в реальном времени и подробными логами.
 - **Сравнение "До/После"**: Интерактивный слайдер позволяет мгновенно сравнить оригинальное и очищенное изображение.
-- **Ручное удаление**: Возможность ручного выделения области водяного знака с инструментами масштабирования и панорамирования для точного контроля.
 - **Эффективная работа**: AI-модель загружается один раз и кешируется для последующего использования. Модульная архитектура обеспечивает плавную работу.
 - **Открытый исходный код**: Полностью прозрачный проект, открытый для вклада сообщества.
 
@@ -40,10 +41,12 @@
 
 1. Нажмите на иконку **Gemini Watermark Remover** на панели инструментов Chrome. Откроется приложение в новой вкладке.
 2. **Перетащите** файл изображения, созданного Gemini, в указанную область или нажмите для выбора файла.
-3. Приложение автоматически начнет обработку изображения. Вы можете следить за прогрессом через прогресс-бар и логи.
-4. После завершения очищенное изображение будет отображено с **слайдером сравнения "до/после"**.
-5. Нажмите кнопку **"Download Image"**, чтобы сохранить финальное изображение без водяного знака на ваш компьютер.
-6. Для обработки другого изображения просто нажмите **"Process Another"**.
+3. **Выделите область водяного знака кистью**: После загрузки изображения используйте инструмент кисти, чтобы вручную закрасить область, где находится водяной знак.
+4. **Подкорректируйте выделение**: При необходимости подотрите края или добавьте дополнительные участки для более точного выделения. Используйте инструменты масштабирования (zoom) и панорамирования (pan) для удобства.
+5. **Нажмите кнопку "Удалить водяной знак"**: После того как вы выделили нужную область, нажмите кнопку для запуска AI-обработки. Приложение обработает только выделенную вами область.
+6. После завершения очищенное изображение будет отображено с **слайдером сравнения "до/после"**.
+7. Нажмите кнопку **"Download Image"**, чтобы сохранить финальное изображение без водяного знака на ваш компьютер.
+8. Для обработки другого изображения просто нажмите **"Process Another"**.
 
 ### ⚙️ Архитектура проекта
 
@@ -95,11 +98,12 @@ This tool provides a clean, standalone interface to process your images. No data
 ### 🌟 Key Features
 
 - **100% Local & Private**: All processing happens directly in your browser. Your images never leave your computer.
-- **High-Quality Inpainting**: Uses the powerful LaMa (Large Mask Inpainting) AI model to intelligently remove the watermark with minimal impact on the original image.
-- **Preserves Original Quality**: Only the small watermark area is modified. The rest of your image remains pixel-perfect and untouched.
+- **Manual Area Selection**: Full control over the process - you manually select the watermark area with a brush tool, ensuring maximum precision.
+- **Editing Tools**: Brush for selection, eraser for correction, zoom and pan controls for comfortable and accurate work.
+- **High-Quality AI Processing**: Uses the powerful LaMa (Large Mask Inpainting) model to intelligently remove watermarks with natural background restoration.
+- **Preserves Original Quality**: Only the area you select is modified. The rest of your image remains pixel-perfect and untouched.
 - **Modern & Intuitive UI**: A sleek, responsive interface with drag-and-drop support, a real-time progress bar, and detailed logs.
 - **Before & After Comparison**: An interactive slider lets you instantly compare the original and cleaned images to see the results.
-- **Manual Removal Mode**: Ability to manually select watermark area with zoom and pan controls for precise editing.
 - **Efficient Performance**: The AI model is loaded once and cached for subsequent uses. A modular architecture ensures a smooth user experience.
 - **Open Source**: Fully transparent and open for community contributions.
 
@@ -113,10 +117,12 @@ This extension is distributed as an unpacked extension and requires a manual ins
 
 1. Click the **Gemini Watermark Remover** icon in your Chrome toolbar. This will open the application in a new tab.
 2. **Drag and drop** an image file generated by Gemini into the designated area, or click to browse your files.
-3. The application will automatically start processing the image. You can monitor the progress via the progress bar and detailed logs.
-4. Once complete, the cleaned image will be displayed with a **before/after comparison slider**.
-5. Click the **"Download Image"** button to save the final, watermark-free image to your computer.
-6. To process another image, simply click **"Process Another"**.
+3. **Mark the watermark area with the brush**: After loading the image, use the brush tool to manually paint over the area where the watermark is located.
+4. **Refine your selection**: If needed, erase edges or add additional areas for more precise selection. Use the zoom and pan controls for better accuracy.
+5. **Click the "Remove Watermark" button**: Once you've marked the desired area, click the button to start AI processing. The application will process only the area you've selected.
+6. Once complete, the cleaned image will be displayed with a **before/after comparison slider**.
+7. Click the **"Download Image"** button to save the final, watermark-free image to your computer.
+8. To process another image, simply click **"Process Another"**.
 
 ### ⚙️ Project Architecture
 

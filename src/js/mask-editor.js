@@ -95,7 +95,7 @@ export class MaskEditor {
     this.maskCanvas.width = this.imageBitmap.width;
     this.maskCanvas.height = this.imageBitmap.height;
     this.maskCanvas.className = 'mask-editor-mask-canvas';
-    this.maskCtx = this.maskCanvas.getContext('2d');
+    this.maskCtx = this.maskCanvas.getContext('2d', { willReadFrequently: true });
 
     // Create cursor canvas (top layer - for custom cursor)
     this.cursorCanvas = document.createElement('canvas');
@@ -622,7 +622,7 @@ export class MaskEditor {
     const tempCanvas = document.createElement('canvas');
     tempCanvas.width = targetSize;
     tempCanvas.height = targetSize;
-    const tempCtx = tempCanvas.getContext('2d');
+    const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true });
 
     // First, create a canvas with the binary mask
     const binaryCanvas = document.createElement('canvas');

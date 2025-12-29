@@ -194,7 +194,7 @@ export function composeFinalImageWithMask(originalBitmap, processedImageData, ma
   const finalCanvas = document.createElement('canvas');
   finalCanvas.width = origWidth;
   finalCanvas.height = origHeight;
-  const finalCtx = finalCanvas.getContext('2d');
+  const finalCtx = finalCanvas.getContext('2d', { willReadFrequently: true });
 
   // Draw original image as base
   finalCtx.drawImage(originalBitmap, 0, 0);
@@ -213,7 +213,7 @@ export function composeFinalImageWithMask(originalBitmap, processedImageData, ma
   const scaledCanvas = document.createElement('canvas');
   scaledCanvas.width = origWidth;
   scaledCanvas.height = origHeight;
-  const scaledCtx = scaledCanvas.getContext('2d');
+  const scaledCtx = scaledCanvas.getContext('2d', { willReadFrequently: true });
   scaledCtx.drawImage(processedCanvas, 0, 0, origWidth, origHeight);
   const scaledProcessedData = scaledCtx.getImageData(0, 0, origWidth, origHeight);
 
@@ -227,7 +227,7 @@ export function composeFinalImageWithMask(originalBitmap, processedImageData, ma
   const scaledMaskCanvas = document.createElement('canvas');
   scaledMaskCanvas.width = origWidth;
   scaledMaskCanvas.height = origHeight;
-  const scaledMaskCtx = scaledMaskCanvas.getContext('2d');
+  const scaledMaskCtx = scaledMaskCanvas.getContext('2d', { willReadFrequently: true });
   scaledMaskCtx.drawImage(maskCanvas, 0, 0, origWidth, origHeight);
   const scaledMaskData = scaledMaskCtx.getImageData(0, 0, origWidth, origHeight);
 
@@ -261,7 +261,7 @@ export function resizeImageForModel(bitmap) {
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
   ctx.drawImage(bitmap, 0, 0, size, size);
   return ctx.getImageData(0, 0, size, size);
 }
